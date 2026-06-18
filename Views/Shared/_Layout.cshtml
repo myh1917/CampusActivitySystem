@@ -24,71 +24,78 @@
                 <i class="bi bi-mortarboard-fill"></i> 校园活动报名与签到系统
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/"><i class="bi bi-house-door"></i> 首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/Home/ActivityList"><i class="bi bi-list-ul"></i> 活动列表</a>
+                        <!-- 修改为 Activity/Index -->
+                        <a class="nav-link text-white" asp-controller="Activity" asp-action="Index">
+                            <i class="bi bi-list-ul"></i> 活动列表
+                        </a>
                     </li>
 
                     @if (Context.Session.GetString("UserId") != null)
-    {
-        <!-- 已登录状态 -->
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/Home/SignIn"><i class="bi bi-check2-square"></i> 签到</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-gear"></i> 管理
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/Home/AdminIndex">后台首页</a></li>
-                            <li><a class="dropdown-item" href="/Home/AdminUserList">用户管理</a></li>
-                            <li><a class="dropdown-item" href="/Home/AdminActivityManage">活动管理</a></li>
-                            <li><a class="dropdown-item" href="/Home/SignControl">签到控制台</a></li>
-                            <li><a class="dropdown-item" href="/Home/Statistics">统计导出</a></li>
-                            <li><a class="dropdown-item" href="/Home/MyActivities"><i class="bi bi-clipboard-data"></i> 我的活动</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/Home/Notices"><i class="bi bi-bell"></i> 通知</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> @Context.Session.GetString("UserName")
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/Account/Info">个人信息</a></li>
-                            <li><a class="dropdown-item" href="/Account/MyRegistrations">我的报名</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/Account/Logout">退出登录</a></li>
-                        </ul>
-                    </li>
-    }
-    else
-    {
- <!-- 未登录状态 -->
-                        <li class="nav-item">
-                        <a class="nav-link text-white" href="/Home/Login"><i class="bi bi-box-arrow-in-right"></i> 登录</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link text-white" href="/Home/Register"><i class="bi bi-person-plus"></i> 注册</a>
-                        </li>
-    }
-                    </ul>
-                </div>
+                    {
+                            <!-- 已登录状态 -->
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/Home/SignIn"><i class="bi bi-check2-square"></i> 签到</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-gear"></i> 管理
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/Home/AdminIndex">后台首页</a></li>
+                                    <li><a class="dropdown-item" href="/Home/AdminUserList">用户管理</a></li>
+                                    <!-- 修改为 Activity/Create -->
+                                    <li><a class="dropdown-item" asp-controller="Activity" asp-action="Create">活动管理</a></li>
+                                    <li><a class="dropdown-item" href="/Home/SignControl">签到控制台</a></li>
+                                    <li><a class="dropdown-item" href="/Home/Statistics">统计导出</a></li>
+                                    <li><a class="dropdown-item" href="/Home/MyActivities"><i class="bi bi-clipboard-data"></i> 我的活动</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <!-- 修改为 Notice/Index -->
+                                <a class="nav-link text-white" asp-controller="Notice" asp-action="Index">
+                                    <i class="bi bi-bell"></i> 通知
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> @Context.Session.GetString("UserName")
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/Account/Info">个人信息</a></li>
+                                    <!-- 修改为 Registration/MyRegistrations -->
+                                    <li><a class="dropdown-item" asp-controller="Registration" asp-action="MyRegistrations">我的报名</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/Account/Logout">退出登录</a></li>
+                                </ul>
+                            </li>
+                    }
+                    else
+                    {
+                            <!-- 未登录状态 -->
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/Home/Login"><i class="bi bi-box-arrow-in-right"></i> 登录</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/Home/Register"><i class="bi bi-person-plus"></i> 注册</a>
+                            </li>
+                    }
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
     <!-- 主内容区 -->
     <main class="container py-4">
-            @RenderBody()
-        </main>
-    </div>
+        @RenderBody()
+    </main>
 
     <!-- 页脚 -->
     <footer class="bg-dark text-white text-center py-3 mt-5">

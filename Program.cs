@@ -17,6 +17,9 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
+// 注册通知服务
+builder.Services.AddScoped<CampusActivitySystem.Services.NoticeService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

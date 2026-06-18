@@ -1,0 +1,91 @@
+﻿@model List<CampusActivitySystem.Models.Registration>
+@{
+    ViewData["Title"] = "我的报名";
+}
+
+<h3 class="mb-4"><i class="bi bi-journal-check"></i> 我的报名记录</h3>
+
+@if (TempData["Success"] != null)
+{
+        <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+        <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (!string.IsNullOrEmpty(ViewBag.Message as string))
+{
+        <div class="alert alert-warning">@ViewBag.Message</div>
+}
+
+@if (Model == null)
+{
+        <div class="alert alert-warning">数据加载失败，请重试。</div>
+}
+else if (!Model.Any())
+{
+        <div class="alert alert-info">暂无报名记录，去活动列表报名吧！</div>
+}
+else
+{
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>活动名称</th>
+                        <th>状态</th>
+                        <th>报名时间</th>
+                        <th>签到</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var reg in Model)
+                {
+                            <tr>
+                                <td>@reg.Activity?.Title</td>
+                                <td>
+                            @if (reg.Status == "REGISTERED")
+                            {
+                                            <span class="badge bg-success">已报名</span>
+                            }
+                            else if (reg.Status == "CANCELLED")
+                            {
+                                            <span class="badge bg-secondary">已取消</span>
+                            }
+                            else if (reg.Status == "CHECKED_IN")
+                            {
+                                            <span class="badge bg-info">已签到</span>
+                            }
+                            else
+                            {
+                                            <span class="badge bg-warning">@reg.Status</span>
+                            }
+                                </td>
+                                <td>@reg.RegisteredAt.ToString("yyyy-MM-dd")</td>
+                                <td>
+                            @if (reg.Status == "CHECKED_IN")
+                            {
+                                            <span class="badge bg-success">已签到</span>
+                            }
+                            else
+                            {
+                                            <span class="badge bg-warning text-dark">未签到</span>
+                            }
+                                </td>
+                                <td>
+                            @if (reg.Status == "REGISTERED")
+                            {
+                                            <button class="btn btn-sm btn-outline-danger" disabled>取消报名</button>
+                            }
+                            else
+                            {
+                                            <span class="text-muted">-</span>
+                            }
+                                </td>
+                            </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+}

@@ -24,8 +24,7 @@ namespace CampusActivitySystem.Data
         {
             modelBuilder.Entity<Registration>()
                 .HasIndex(r => new { r.ActivityId, r.UserId })
-                .IsUnique()
-                .HasFilter("[Status] NOT IN ('CANCELLED', 'REJECTED')");
+                .IsUnique();
 
             modelBuilder.Entity<SignIn>()
                 .HasIndex(s => new { s.SessionId, s.RegistrationId })
@@ -50,6 +49,19 @@ namespace CampusActivitySystem.Data
                 .HasOne(rp => rp.Permission)
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionId);
+
+            // 避免循环级联错误（必须加）
+            modelBuilder.Entity<Registration>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Registration>()
+                .HasOne(r => r.Activity)
+                .WithMany(a => a.Registrations)
+                .HasForeignKey(r => r.ActivityId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

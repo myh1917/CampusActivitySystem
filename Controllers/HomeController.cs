@@ -70,4 +70,10 @@ public class HomeController : Controller
     public IActionResult SignControl() => View();       // 签到控制台
     public IActionResult Statistics() => View();        // 统计导出
     public IActionResult Notices() => View();           // 通知中心
+    public IActionResult FakeLogin()
+    {
+        HttpContext.Session.SetInt32("UserId", 2); // 假设学生ID=2，请确保数据库中有该用户
+        return RedirectToAction("Index", "Activity");
+    }
+
 }

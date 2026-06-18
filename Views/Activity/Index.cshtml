@@ -1,9 +1,8 @@
-@model List<CampusActivitySystem.Models.Activity>
+ï»¿@model List<CampusActivitySystem.Models.Activity>
 @{
-    ViewData["Title"] = "»î¶¯ÁĞ±í";
+    ViewData["Title"] = "æ´»åŠ¨åˆ—è¡¨";
 }
 
-<!-- ÏÔÊ¾²Ù×÷½á¹ûÏûÏ¢ -->
 @if (TempData["Success"] != null)
 {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -20,34 +19,50 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold"><i class="bi bi-calendar-event"></i> È«²¿»î¶¯</h2>
-    <a asp-action="Create" asp-controller="Activity" class="btn btn-primary"><i class="bi bi-plus-circle"></i> ·¢²¼»î¶¯</a>
+    <h2 class="fw-bold"><i class="bi bi-calendar-event"></i> å…¨éƒ¨æ´»åŠ¨</h2>
+    <a asp-action="Create" asp-controller="Activity" class="btn btn-primary"><i class="bi bi-plus-circle"></i> å‘å¸ƒæ´»åŠ¨</a>
 </div>
 
-<!-- ËÑË÷É¸Ñ¡ -->
 <form asp-action="Index" asp-controller="Activity" method="get">
     <div class="row mb-4">
         <div class="col-md-6 mb-2">
             <div class="input-group">
-                <input type="text" name="keyword" class="form-control" placeholder="ËÑË÷»î¶¯Ãû³Æ..." value="@Context.Request.Query["keyword"]">
-                <button class="btn btn-primary" type="submit">ËÑË÷</button>
+                <input type="text" name="keyword" class="form-control" placeholder="æœç´¢æ´»åŠ¨åç§°..." value="@Context.Request.Query["keyword"]">
+                <button class="btn btn-primary" type="submit">æœç´¢</button>
             </div>
         </div>
         <div class="col-md-3 mb-2">
             <select name="category" class="form-select">
-                <option value="">È«²¿Àà±ğ</option>
-                <option value="½²×ù" selected="@(Context.Request.Query["category"] == "½²×ù" ? "selected" : null)">½²×ù</option>
-                <option value="¾ºÈü" selected="@(Context.Request.Query["category"] == "¾ºÈü" ? "selected" : null)">¾ºÈü</option>
-                <option value="ÉçÍÅ»î¶¯" selected="@(Context.Request.Query["category"] == "ÉçÍÅ»î¶¯" ? "selected" : null)">ÉçÍÅ»î¶¯</option>
+                <option value="">å…¨éƒ¨ç±»åˆ«</option>
+                @if (Context.Request.Query["category"] == "è®²åº§")
+                {
+                        <option value="è®²åº§" selected>è®²åº§</option>
+                }
+                else
+                {
+                        <option value="è®²åº§">è®²åº§</option>
+                }
+                @if (Context.Request.Query["category"] == "ç«èµ›")
+                {
+                        <option value="ç«èµ›" selected>ç«èµ›</option>
+                }
+                else
+                {
+                        <option value="ç«èµ›">ç«èµ›</option>
+                }
+                @if (Context.Request.Query["category"] == "ç¤¾å›¢æ´»åŠ¨")
+                {
+                        <option value="ç¤¾å›¢æ´»åŠ¨" selected>ç¤¾å›¢æ´»åŠ¨</option>
+                }
+                else
+                {
+                        <option value="ç¤¾å›¢æ´»åŠ¨">ç¤¾å›¢æ´»åŠ¨</option>
+                }
             </select>
-        </div>
-        <div class="col-md-3 mb-2">
-            <!-- ×´Ì¬É¸Ñ¡Ôİ²»ÊµÏÖ -->
         </div>
     </div>
 </form>
 
-<!-- »î¶¯¿¨Æ¬Íø¸ñ -->
 <div class="row">
     @if (Model != null && Model.Any())
     {
@@ -64,10 +79,9 @@
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="badge bg-success"><i class="bi bi-people"></i> @item.RegisteredCount/@item.Capacity</span>
-                                    <!-- ±¨Ãû±íµ¥ -->
                                     <form asp-controller="Registration" asp-action="Register" method="post">
                                         <input type="hidden" name="activityId" value="@item.Id" />
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">Á¢¼´±¨Ãû</button>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">ç«‹å³æŠ¥å</button>
                                     </form>
                                 </div>
                             </div>
@@ -78,7 +92,7 @@
     else
     {
             <div class="col-12">
-                <div class="alert alert-info">ÔİÊ±Ã»ÓĞ»î¶¯£¬È¥·¢²¼Ò»¸ö°É£¡</div>
+                <div class="alert alert-info">æš‚æ—¶æ²¡æœ‰æ´»åŠ¨ï¼Œå»å‘å¸ƒä¸€ä¸ªå§ï¼</div>
             </div>
     }
 </div>
