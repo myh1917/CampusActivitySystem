@@ -110,7 +110,7 @@ body {
     --bs-btn-padding-y: 0.25rem;
     --bs-btn-padding-x: 0.5rem;
     font-size: 0.875rem;
-}
+  }
 
 /* 卡片阴影加深 */
 .shadow-sm {
@@ -128,7 +128,7 @@ body {
 }
 /* 卡片整体可点击 */
 .card-clickable {
-    position: relative;
+  position: relative;
     cursor: pointer;
 }
 
