@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "系统管理";
+}
+
+<h2>系统管理</h2>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">审计日志</h5>
+                <p class="card-text">查看系统操作日志</p>
+                <a href="@Url.Action("AuditLogs")" class="btn btn-primary">查看日志</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">系统配置</h5>
+                <p class="card-text">管理系统参数设置</p>
+                <a href="@Url.Action("SystemConfigs")" class="btn btn-primary">配置管理</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">数据库备份</h5>
+                <p class="card-text">备份数据库数据</p>
+                <a href="@Url.Action("Backup")" class="btn btn-primary">备份数据库</a>
+            </div>
+        </div>
+    </div>
+</div>

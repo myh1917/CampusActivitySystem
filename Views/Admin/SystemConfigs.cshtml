@@ -1,0 +1,46 @@
+@model List<CampusActivitySystem.Models.SystemConfig>
+
+@{
+    ViewData["Title"] = "系统配置";
+}
+
+<h2>系统配置</h2>
+
+<form method="post" class="mb-4">
+    <div class="form-row">
+        <div class="col-md-3">
+            <input type="text" name="key" class="form-control" placeholder="配置键" required />
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="value" class="form-control" placeholder="配置值" required />
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="description" class="form-control" placeholder="描述" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">保存配置</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>配置键</th>
+            <th>配置值</th>
+            <th>描述</th>
+            <th>更新时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var config in Model)
+        {
+            <tr>
+                <td>@config.ConfigKey</td>
+                <td>@config.ConfigValue</td>
+                <td>@config.Description</td>
+                <td>@config.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+            </tr>
+        }
+    </tbody>
+</table>

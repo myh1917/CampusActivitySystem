@@ -1,0 +1,39 @@
+@model List<CampusActivitySystem.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "审计日志";
+}
+
+<h2>审计日志</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>操作</th>
+            <th>目标类型</th>
+            <th>目标ID</th>
+            <th>结果</th>
+            <th>操作时间</th>
+            <th>IP地址</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.Id</td>
+                <td>@log.Action</td>
+                <td>@log.TargetType</td>
+                <td>@log.TargetId</td>
+                <td>
+                    <span class="badge @(log.Result ? "badge-success" : "badge-danger")">
+                        @(log.Result ? "成功" : "失败")
+                    </span>
+                </td>
+                <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@log.IpAddress</td>
+            </tr>
+        }
+    </tbody>
+</table>

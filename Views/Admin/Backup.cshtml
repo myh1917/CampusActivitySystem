@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "数据库备份";
+}
+
+<h2>数据库备份</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert @(ViewBag.Success ? "alert-success" : "alert-danger")">
+        @ViewBag.Message
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">数据库信息</h5>
+        <p class="card-text">服务器: @ViewBag.BackupInfo?.Server</p>
+        <p class="card-text">数据库: @ViewBag.BackupInfo?.Database</p>
+        <p class="card-text">备份路径: @ViewBag.BackupInfo?.BackupPath</p>
+        <form method="post" action="@Url.Action("PerformBackup")">
+            <button type="submit" class="btn btn-danger">执行备份</button>
+        </form>
+    </div>
+</div>
