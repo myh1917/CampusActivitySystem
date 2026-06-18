@@ -6,12 +6,13 @@ namespace CampusActivitySystem.Data
     {
         public static void Initialize(AppDbContext context)
         {
+            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             if (context.Users.Any()) return;
 
-            var adminRole = new Role { Code = "admin", Name = "系统管理员" };
-            var orgRole = new Role { Code = "organizer", Name = "活动负责人" };
-            var studentRole = new Role { Code = "student", Name = "学生" };
+            var adminRole = new Role { Code = "admin", Name = "系统管理员", Description = "系统管理员" };
+            var orgRole = new Role { Code = "organizer", Name = "活动负责人", Description = "活动负责人" };
+            var studentRole = new Role { Code = "student", Name = "学生", Description = "普通学生" };
             context.Roles.AddRange(adminRole, orgRole, studentRole);
 
             var perm1 = new Permission { Code = "activity:create", Name = "发布活动", Module = "活动管理" };
@@ -23,7 +24,12 @@ namespace CampusActivitySystem.Data
                 Account = "admin",
                 PasswordHash = "jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=",
                 Name = "管理员",
-                Status = "ACTIVE"
+                StudentNo = "admin",          // 管理员的学号可以随便填
+                College = "信息中心",         // 补充
+                Phone = "13800000000",        // 补充手机号
+                Status = "ACTIVE",
+                CreatedAt = DateTime.Now,     // 添加时间戳
+                UpdatedAt = DateTime.Now
             };
             var stuUser = new User
             {
@@ -31,7 +37,11 @@ namespace CampusActivitySystem.Data
                 PasswordHash = "jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=",
                 Name = "小明",
                 StudentNo = "2024001",
-                Status = "ACTIVE"
+                College = "计算机学院",       // 补充
+                Phone = "13811111111",        // 补充手机号
+                Status = "ACTIVE",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
             context.Users.AddRange(adminUser, stuUser);
 
