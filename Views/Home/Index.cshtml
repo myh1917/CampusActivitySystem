@@ -1,8 +1,98 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "首页";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- 欢迎区域 -->
+<div class="p-5 mb-4 rounded-3 text-white" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold"><i class="bi bi-calendar-check"></i> 校园活动报名与签到系统</h1>
+        <p class="col-md-8 fs-4">发现身边精彩活动，一键报名、快速签到，让你的校园生活更有序！</p>
+    </div>
+</div>
+
+<!-- 搜索与筛选 -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="搜索活动名称...">
+            <button class="btn btn-primary" type="button"><i class="bi bi-search"></i> 搜索</button>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <select class="form-select">
+            <option value="">全部类别</option>
+            <option>讲座</option>
+            <option>竞赛</option>
+            <option>社团活动</option>
+            <option>志愿服务</option>
+        </select>
+    </div>
+</div>
+
+<!-- 活动卡片列表 -->
+<div class="row">
+    <!-- 活动1 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm card-clickable">
+            <!-- 覆盖整个卡片的透明链接 -->
+            <a href="/Home/ActivityDetail" class="card-link-cover"></a>
+
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title">人工智能技术讲座</h5>
+                    <span class="badge bg-primary">讲座</span>
+                </div>
+                <p class="card-text text-muted">
+                    <i class="bi bi-geo-alt"></i> 图书馆报告厅<br>
+                    <i class="bi bi-clock"></i> 2026-06-15 14:00-16:00
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-success">剩余 45 / 100 名额</span>
+                    <a href="/Home/ActivityDetail" class="btn btn-outline-primary btn-sm">立即报名</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动2 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm card-clickable">
+            <a href="/Home/ActivityDetail" class="card-link-cover"></a>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title">校园歌手大赛</h5>
+                    <span class="badge bg-danger">竞赛</span>
+                </div>
+                <p class="card-text text-muted">
+                    <i class="bi bi-geo-alt"></i> 大学生活动中心<br>
+                    <i class="bi bi-clock"></i> 2026-06-20 18:30-21:00
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-success">剩余 12 / 50 名额</span>
+                    <a href="/Home/ActivityDetail" class="btn btn-outline-primary btn-sm">立即报名</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动3 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm card-clickable">
+            <a href="/Home/ActivityDetail" class="card-link-cover"></a>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title">社区志愿服务日</h5>
+                    <span class="badge bg-warning text-dark">志愿</span>
+                </div>
+                <p class="card-text text-muted">
+                    <i class="bi bi-geo-alt"></i> 校门口集合<br>
+                    <i class="bi bi-clock"></i> 2026-06-10 08:00-12:00
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-danger">名额已满</span>
+                    <a href="/Home/ActivityDetail" class="btn btn-outline-secondary btn-sm disabled">候补</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

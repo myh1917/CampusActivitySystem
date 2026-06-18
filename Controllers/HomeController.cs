@@ -27,4 +27,47 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
     }
+
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();   // 清除所有 Session 数据
+        return RedirectToAction("Index", "Home");
+    }
+
+    public IActionResult MyActivities()
+    {
+        return View();
+    }
+
+    // ============ 预览用Action，正式开发后可以删除 ============
+    public IActionResult Login()
+    {
+        return View();
+    }
+    public IActionResult Register()
+    {
+        return View();
+    }
+    public IActionResult ActivityList()
+    {
+        return View();
+    }
+  /*  public IActionResult ActivityDetail()
+    {
+        return View(); // 后期会接收id参数，现在先预览
+    }*/
+    public IActionResult SignIn()
+    {
+        return View();
+    }
+    // ============ 预览用Action（全部页面）============
+    public IActionResult ActivityDetail() => View();
+    public IActionResult Profile() => View();           // 个人信息
+    public IActionResult MyRegistrations() => View();   // 我的报名
+    public IActionResult AdminIndex() => View();        // 后台首页
+    public IActionResult AdminUserList() => View();     // 用户管理
+    public IActionResult AdminActivityManage() => View();// 活动管理
+    public IActionResult SignControl() => View();       // 签到控制台
+    public IActionResult Statistics() => View();        // 统计导出
+    public IActionResult Notices() => View();           // 通知中心
 }

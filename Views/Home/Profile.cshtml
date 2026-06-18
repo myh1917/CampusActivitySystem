@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "我的报名";
+}
+
+<h3 class="mb-4"><i class="bi bi-journal-check"></i> 我的报名记录</h3>
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>活动名称</th>
+                <th>状态</th>
+                <th>报名时间</th>
+                <th>签到</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="/Home/ActivityDetail">人工智能技术讲座</a></td>
+                <td><span class="badge bg-success">已报名</span></td>
+                <td>2026-06-12</td>
+                <td><span class="badge bg-warning">未签到</span></td>
+                <td><a href="/Home/SignIn" class="btn btn-sm btn-outline-primary">去签到</a></td>
+            </tr>
+            <tr>
+                <td><a href="#">校园歌手大赛</a></td>
+                <td><span class="badge bg-success">已报名</span></td>
+                <td>2026-06-10</td>
+                <td><span class="badge bg-success">已签到</span></td>
+                <td><span class="text-muted">-</span></td>
+            </tr>
+            <tr>
+                <td><a href="#">社区志愿服务</a></td>
+                <td><span class="badge bg-secondary">已取消</span></td>
+                <td>2026-06-08</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

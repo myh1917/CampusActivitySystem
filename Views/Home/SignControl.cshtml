@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "签到控制台";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body">
+                <h4>当前活动：人工智能技术讲座</h4>
+                <p>签到状态：<span class="badge bg-success">进行中</span>  |  已签：32/100</p>
+                <div class="d-flex gap-2 mb-4">
+                    <button class="btn btn-primary"><i class="bi bi-play"></i> 开启签到</button>
+                    <button class="btn btn-outline-danger">关闭签到</button>
+                    <button class="btn btn-outline-secondary">手动补签</button>
+                </div>
+                <div class="text-center p-4 bg-light rounded-3">
+                    <h5>签到二维码</h5>
+                    <i class="bi bi-qr-code display-1 text-muted"></i>
+                    <p class="mt-2">或输入6位签到码：<strong class="fs-4">123456</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h5>实时签到列表</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">张三 - 14:05 <span class="badge bg-success">二维码</span></li>
+                    <li class="list-group-item">李四 - 14:04 <span class="badge bg-info">签到码</span></li>
+                    <li class="list-group-item">王五 - 14:03 <span class="badge bg-warning">手动</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

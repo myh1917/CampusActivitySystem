@@ -1,49 +1,105 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    // 临时模拟登录状态：把下面一行注释掉就是未登录，取消注释就是已登录
+    // 正式上线后请删除下面这一行
+    Context.Session.SetString("UserId", "1"); Context.Session.SetString("UserName", "测试用户");
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CampusActivitySystem</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CampusActivitySystem.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - 校园活动报名与签到系统</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CampusActivitySystem</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg sticky-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="container">
-            &copy; 2026 - CampusActivitySystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a class="navbar-brand text-white fw-bold" href="/">
+                <i class="bi bi-mortarboard-fill"></i> 校园活动报名与签到系统
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/"><i class="bi bi-house-door"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Home/ActivityList"><i class="bi bi-list-ul"></i> 活动列表</a>
+                    </li>
+
+                    @if (Context.Session.GetString("UserId") != null)
+    {
+        <!-- 已登录状态 -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Home/SignIn"><i class="bi bi-check2-square"></i> 签到</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-gear"></i> 管理
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/Home/AdminIndex">后台首页</a></li>
+                            <li><a class="dropdown-item" href="/Home/AdminUserList">用户管理</a></li>
+                            <li><a class="dropdown-item" href="/Home/AdminActivityManage">活动管理</a></li>
+                            <li><a class="dropdown-item" href="/Home/SignControl">签到控制台</a></li>
+                            <li><a class="dropdown-item" href="/Home/Statistics">统计导出</a></li>
+                            <li><a class="dropdown-item" href="/Home/MyActivities"><i class="bi bi-clipboard-data"></i> 我的活动</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Home/Notices"><i class="bi bi-bell"></i> 通知</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> @Context.Session.GetString("UserName")
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/Account/Info">个人信息</a></li>
+                            <li><a class="dropdown-item" href="/Account/MyRegistrations">我的报名</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/Account/Logout">退出登录</a></li>
+                        </ul>
+                    </li>
+    }
+    else
+    {
+ <!-- 未登录状态 -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Home/Login"><i class="bi bi-box-arrow-in-right"></i> 登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Home/Register"><i class="bi bi-person-plus"></i> 注册</a>
+                    </li>
+    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container py-4">
+        @RenderBody()
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 校园活动报名与签到系统 | 课程设计项目</p>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 自定义JS -->
+    <script src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

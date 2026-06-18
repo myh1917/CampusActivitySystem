@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "活动管理";
+}
+
+<h3 class="mb-4"><i class="bi bi-gear"></i> 活动管理</h3>
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <!-- 活动编辑器（发布和编辑共用） -->
+        <form>
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">活动标题</label>
+                    <input type="text" class="form-control" placeholder="输入活动标题" value="人工智能技术讲座">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">类别</label>
+                    <select class="form-select"><option>讲座</option><option>竞赛</option></select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">地点</label>
+                    <input type="text" class="form-control" value="图书馆报告厅">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">容量</label>
+                    <input type="number" class="form-control" value="100">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">是否需要审核</label>
+                    <select class="form-select"><option>否</option><option>是</option></select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">报名开始时间</label>
+                    <input type="datetime-local" class="form-control" value="2026-06-10T08:00">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">报名结束时间</label>
+                    <input type="datetime-local" class="form-control" value="2026-06-14T18:00">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">活动开始时间</label>
+                    <input type="datetime-local" class="form-control" value="2026-06-15T14:00">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">活动结束时间</label>
+                    <input type="datetime-local" class="form-control" value="2026-06-15T16:00">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">活动描述</label>
+                    <textarea class="form-control" rows="4">本次讲座将探讨人工智能技术的最新发展...</textarea>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">保存活动</button>
+                    <button type="button" class="btn btn-outline-secondary">取消</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <h5>已发布活动</h5>
+        <table class="table">
+            <thead><tr><th>标题</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+                <tr><td>人工智能讲座</td><td>报名中</td><td><button class="btn btn-sm btn-outline-primary">编辑</button> <button class="btn btn-sm btn-outline-danger">取消</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>

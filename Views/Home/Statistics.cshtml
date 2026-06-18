@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "统计导出";
+}
+
+<h3 class="mb-4"><i class="bi bi-bar-chart-line"></i> 统计报表</h3>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center shadow-sm rounded-4">
+            <div class="card-body"><h6>报名人数</h6><h2 class="text-primary">100</h2></div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center shadow-sm rounded-4">
+            <div class="card-body"><h6>签到人数</h6><h2 class="text-success">87</h2></div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center shadow-sm rounded-4">
+            <div class="card-body"><h6>签到率</h6><h2 class="text-info">87%</h2></div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <h5>导出选项</h5>
+        <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-outline-primary"><i class="bi bi-file-earmark-excel"></i> 导出报名名单 (Excel)</button>
+            <button class="btn btn-outline-success"><i class="bi bi-file-earmark-excel"></i> 导出签到名单 (Excel)</button>
+            <button class="btn btn-outline-secondary"><i class="bi bi-file-earmark-pdf"></i> 导出统计报表</button>
+        </div>
+        <hr>
+        <h6>活动选择</h6>
+        <select class="form-select w-auto">
+            <option>人工智能技术讲座</option>
+            <option>校园歌手大赛</option>
+        </select>
+    </div>
+</div>

@@ -1,22 +1,151 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* 全局字体和背景 */
 body {
-  margin-bottom: 60px;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    background-color: #f5f7fa;
+}
+
+/* 卡片悬停效果 */
+.card {
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
+    }
+
+/* 自定义按钮 */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 8px;
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5a6fd6, #6a4196);
+    }
+
+.btn-outline-primary {
+    border-color: #667eea;
+    color: #667eea;
+    border-radius: 8px;
+}
+
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-color: transparent;
+        color: white;
+    }
+
+/* 表单样式 */
+.form-control:focus {
+    border-color: #764ba2;
+    box-shadow: 0 0 0 0.2rem rgba(118, 75, 162, 0.25);
+}
+
+/* 导航栏链接悬停 */
+.navbar .nav-link:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 8px;
+}
+
+/* 欢迎横幅 */
+.welcome-banner {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 20px;
+    padding: 3rem;
+}
+
+/* 表格美化 */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+    .table thead {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+    }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .display-5 {
+        font-size: 2rem;
+    }
+
+    .welcome-banner {
+        padding: 1.5rem;
+    }
+}
+
+/* 状态徽章动画 */
+.badge.bg-success {
+    background-color: #198754 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000;
+}
+
+/* 输入框组图标对齐 */
+.input-group-text {
+    background-color: rgba(102, 126, 234, 0.1);
+    border: none;
+}
+
+/* 表格内按钮 */
+.table .btn {
+    --bs-btn-padding-y: 0.25rem;
+    --bs-btn-padding-x: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* 卡片阴影加深 */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+}
+
+/* 提示框动画 */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: translate(0, -50px);
+}
+
+.modal.show .modal-dialog {
+    transform: none;
+}
+/* 卡片整体可点击 */
+.card-clickable {
+    position: relative;
+    cursor: pointer;
+}
+
+.card-link-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    text-decoration: none;
+    color: inherit;
+}
+/* 让卡片内部的按钮和文字在覆盖层上方，不至于被遮住 */
+.card-clickable .btn,
+.card-clickable .badge,
+.card-clickable .input-group {
+    position: relative;
+    z-index: 2;
 }

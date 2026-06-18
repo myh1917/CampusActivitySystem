@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "活动详情";
+}
+
+<div class="row">
+    <!-- 左侧活动信息 -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h2 class="fw-bold">人工智能技术讲座</h2>
+                    <span class="badge bg-primary fs-6">讲座</span>
+                </div>
+                <div class="mb-3">
+                    <span class="badge bg-success me-2">报名中</span>
+                    <span class="text-muted"><i class="bi bi-people"></i> 已报 45/100 人</span>
+                </div>
+                <hr>
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-geo-alt"></i> 地点：</strong>图书馆报告厅</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-clock"></i> 活动时间：</strong>2026-06-15 14:00 - 16:00</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-calendar-plus"></i> 报名截止：</strong>2026-06-14 18:00</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-person-check"></i> 负责人：</strong>张老师</div>
+                </div>
+                <h5>活动介绍</h5>
+                <p>本次讲座将探讨人工智能技术的最新发展及其在各行业的应用，包括机器学习、深度学习、自然语言处理等领域的前沿动态。欢迎全校同学参加！</p>
+            </div>
+        </div>
+    </div>
+    <!-- 右侧操作区 -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 20px;">
+            <div class="card-body text-center p-4">
+                <h5 class="card-title">报名参加</h5>
+                <div class="display-4 text-muted my-3">45/100</div>
+                <div class="progress mb-4" style="height: 10px;">
+                    <div class="progress-bar bg-success" style="width: 45%"></div>
+                </div>
+                <!-- 未登录时不显示报名按钮 -->
+                <button class="btn btn-primary btn-lg w-100">立即报名</button>
+                <p class="text-muted small mt-2">报名截止：2026-06-14 18:00</p>
+                <hr>
+                <a href="/Home/SignIn" class="btn btn-outline-success w-100"><i class="bi bi-check-circle"></i> 进入签到</a>
+            </div>
+        </div>
+    </div>
+</div>

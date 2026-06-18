@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "注册";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4 p-md-5">
+                <h4 class="text-center mb-4"><i class="bi bi-person-plus-fill" style="color:#667eea;"></i> 账号注册</h4>
+                <form method="post" action="/Account/Register">
+                    <div class="mb-3">
+                        <label class="form-label">学号</label>
+                        <input type="text" name="studentNo" class="form-control" placeholder="请输入学号" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">姓名</label>
+                        <input type="text" name="name" class="form-control" placeholder="请输入真实姓名" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">账号</label>
+                        <input type="text" name="account" class="form-control" placeholder="设置登录账号" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密码</label>
+                        <input type="password" name="password" class="form-control" placeholder="至少8位" required minlength="8">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">手机号</label>
+                        <input type="text" name="phone" class="form-control" placeholder="选填">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2">注 册</button>
+                </form>
+                <div class="text-center mt-3">
+                    <p class="text-muted">已有账号？ <a href="/Home/Login">立即登录</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
