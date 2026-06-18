@@ -25,7 +25,8 @@ namespace CampusActivitySystem.Data
             modelBuilder.Entity<Registration>()
                 .HasIndex(r => new { r.ActivityId, r.UserId })
                 .IsUnique()
-                .HasFilter("[Status] <> 'CANCELLED' AND [Status] <> 'REJECTED'");
+                .HasFilter("[Status] NOT IN ('CANCELLED', 'REJECTED')");
+
             modelBuilder.Entity<SignIn>()
                 .HasIndex(s => new { s.SessionId, s.RegistrationId })
                 .IsUnique();
@@ -49,12 +50,6 @@ namespace CampusActivitySystem.Data
                 .HasOne(rp => rp.Permission)
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionId);
-            // 禁用所有外键的级联删除，避免多路径级联错误
-            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
-                .SelectMany(e => e.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
-            }
         }
     }
 }
