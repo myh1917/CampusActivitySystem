@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\c\u002B\u002B\\github\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7C07DE10-2DBB-427E-9B3A-BF40EDF911AE}|CampusActivitySystem.csproj|d:\\c\u002B\u002B\\github\\campusactivitysystem.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{7C07DE10-2DBB-427E-9B3A-BF40EDF911AE}|CampusActivitySystem.csproj|solutionrelative:campusactivitysystem.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CampusActivitySystem.csproj",
+              "DocumentMoniker": "D:\\c\u002B\u002B\\github\\CampusActivitySystem.csproj",
+              "RelativeDocumentMoniker": "CampusActivitySystem.csproj",
+              "ToolTip": "D:\\c\u002B\u002B\\github\\CampusActivitySystem.csproj",
+              "RelativeToolTip": "CampusActivitySystem.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-18T12:35:09.796Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

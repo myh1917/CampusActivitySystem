@@ -2,6 +2,16 @@
     ViewData["Title"] = "µÇÂ¼";
 }
 
+@if (TempData["RegisterSuccess"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["RegisterSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+}
+
 <div class="row justify-content-center mt-5">
     <div class="col-md-5 col-lg-4">
         <div class="card shadow-sm border-0 rounded-4">
@@ -10,6 +20,14 @@
                     <i class="bi bi-person-circle display-5"></i>
                 </h2>
                 <h4 class="text-center mb-4">ÓÃ»§µÇÂ¼</h4>
+
+                 @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        @Html.ValidationSummary(false)
+                    </div>
+                }
+
                 <form method="post" action="/Account/Login">
                     <div class="mb-3">
                         <label class="form-label">ÕËºÅ</label>

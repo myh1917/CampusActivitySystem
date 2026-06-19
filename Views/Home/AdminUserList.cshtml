@@ -1,0 +1,95 @@
+﻿@model List<CampusActivitySystem.Models.User>
+
+@{
+    ViewData["Title"] = "用户管理";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="bi bi-people"></i> 用户列表</h3>
+    <span class="badge bg-primary fs-6">共 @(Model?.Count ?? 0) 位用户</span>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>姓名</th>
+                        <th>学号</th>
+                        <th>学院</th>
+                        <th>角色</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var user in Model)
+                        {
+                            var roleName = user.UserRoles?.FirstOrDefault()?.Role?.Name ?? "无";
+                            var roleCode = user.UserRoles?.FirstOrDefault()?.Role?.Code ?? "";
+                            <tr>
+                                <td><strong>@user.Name</strong></td>
+                                <td>@user.StudentNo</td>
+                                <td>@user.College</td>
+                                <td>
+                                    <span class="badge @(roleCode == "admin" ? "bg-danger" : roleCode == "organizer" ? "bg-warning" : "bg-primary")">
+                                        @roleName
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (user.Status == "ACTIVE")
+                                    {
+                                        <span class="badge bg-success">✅ 启用</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">⛔ 禁用</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <form method="post" action="/Admin/ToggleStatus" style="display:inline;">
+                                            <input type="hidden" name="id" value="@user.Id" />
+                                            <button type="submit" class="btn @(user.Status == "ACTIVE" ? "btn-outline-danger" : "btn-outline-success")">
+                                                @(user.Status == "ACTIVE" ? "禁用" : "启用")
+                                            </button>
+                                        </form>
+                                        <form method="post" action="/Admin/AssignRole" style="display:inline;">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <select name="roleCode" class="form-select form-select-sm d-inline-block" style="width:auto; height:31px;">
+                                                <option value="student" selected="@(roleCode == "student")">学生</option>
+                                                <option value="organizer" selected="@(roleCode == "organizer")">组织者</option>
+                                                <option value="admin" selected="@(roleCode == "admin")">管理员</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-outline-primary">分配</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-3">
+                                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                暂无用户数据
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

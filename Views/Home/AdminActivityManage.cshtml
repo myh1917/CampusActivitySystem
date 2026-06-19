@@ -9,19 +9,6 @@
         <form asp-action="Create" asp-controller="Activity" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @* 临时调试：显示所有模型错误（正式发布后可删除） *@
-            @if (!ViewData.ModelState.IsValid)
-            {
-                    <div class="alert alert-danger">
-                        <strong>提交失败，请修正以下错误：</strong>
-                        <ul>
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                                    <li>@error.ErrorMessage</li>
-                        }
-                        </ul>
-                    </div>
-            }
 
             <div class="row g-3">
                 <div class="col-md-8">

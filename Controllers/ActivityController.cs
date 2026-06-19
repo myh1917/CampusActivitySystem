@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CampusActivitySystem.Data;
+﻿using CampusActivitySystem.Data;
+using CampusActivitySystem.Filters;
 using CampusActivitySystem.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CampusActivitySystem.Controllers
 {
+    [Auth]
     public class ActivityController : Controller
     {
         private readonly AppDbContext _context;
@@ -30,6 +32,7 @@ namespace CampusActivitySystem.Controllers
 
         // 发布活动页面
         [HttpGet]
+        [Role("admin")]
         public IActionResult Create()
         {
             return View("~/Views/Home/AdminActivityManage.cshtml", new Activity());
@@ -37,6 +40,7 @@ namespace CampusActivitySystem.Controllers
 
         // 处理发布
         [HttpPost]
+        [Role("admin")]
         public async Task<IActionResult> Create(
             [Bind("Title,Category,Location,Capacity,NeedAudit,RegisterStart,RegisterEnd,StartTime,EndTime,Description")]
             Activity model)
