@@ -1,19 +1,24 @@
 @model CampusActivitySystem.Models.Activity
 @{
-    ViewData["Title"] = "发布活动";
+    bool isEdit = ViewBag.IsEdit ?? false;
+    ViewData["Title"] = isEdit ? "编辑活动" : "发布活动";
 }
 
-<h3 class="mb-4"><i class="bi bi-gear"></i> 活动管理</h3>
+<h3 class="mb-4"><i class="bi bi-gear"></i> @(isEdit ? "编辑活动" : "发布新活动")</h3>
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-body">
-        <form asp-action="Create" asp-controller="Activity" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="@(isEdit ? "Edit" : "Create")" asp-controller="Activity" method="post">
+            @if (isEdit)
+            {
+                <input type="hidden" name="id" value="@Model.Id" />
+            }
 
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="row g-3">
                 <div class="col-md-8">
                     <label asp-for="Title" class="form-label">活动标题</label>
-                    <input asp-for="Title" class="form-control" placeholder="输入活动标题" required>
+                    <input asp-for="Title" class="form-control" placeholder="请输入活动标题" required>
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
@@ -23,52 +28,48 @@
                         <option value="竞赛">竞赛</option>
                         <option value="社团活动">社团活动</option>
                     </select>
-                    <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
                     <label asp-for="Location" class="form-label">地点</label>
                     <input asp-for="Location" class="form-control" required>
-                    <span asp-validation-for="Location" class="text-danger"></span>
                 </div>
                 <div class="col-md-3">
-                    <label asp-for="Capacity" class="form-label">容量</label>
+                    <label asp-for="Capacity" class="form-label">名额</label>
                     <input asp-for="Capacity" class="form-control" type="number" required min="1">
-                    <span asp-validation-for="Capacity" class="text-danger"></span>
                 </div>
                 <div class="col-md-3">
-                    <label asp-for="NeedAudit" class="form-label">是否需要审核</label>
+                    <label asp-for="NeedAudit" class="form-label">需要审核</label>
                     <select asp-for="NeedAudit" class="form-select">
-                        <option value="false">否</option>
-                        <option value="true">是</option>
+                        <option value="false">否（直接报名成功）</option>
+                        <option value="true">是（需管理员审核）</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="RegisterStart" class="form-label">报名开始时间</label>
-                    <input asp-for="RegisterStart" class="form-control" type="datetime-local" required>
-                    <span asp-validation-for="RegisterStart" class="text-danger"></span>
+                    <label asp-for="RegisterStart">报名开始时间</label>
+                    <input asp-for="RegisterStart" class="form-control" type="datetime-local"
+                           asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="RegisterEnd" class="form-label">报名结束时间</label>
-                    <input asp-for="RegisterEnd" class="form-control" type="datetime-local" required>
-                    <span asp-validation-for="RegisterEnd" class="text-danger"></span>
+                    <label asp-for="RegisterEnd">报名结束时间</label>
+                    <input asp-for="RegisterEnd" class="form-control" type="datetime-local"
+                           asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="StartTime" class="form-label">活动开始时间</label>
-                    <input asp-for="StartTime" class="form-control" type="datetime-local" required>
-                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                    <label asp-for="StartTime">活动开始时间</label>
+                    <input asp-for="StartTime" class="form-control" type="datetime-local"
+                           asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="EndTime" class="form-label">活动结束时间</label>
-                    <input asp-for="EndTime" class="form-control" type="datetime-local" required>
-                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                    <label asp-for="EndTime">活动结束时间</label>
+                    <input asp-for="EndTime" class="form-control" type="datetime-local"
+                           asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-12">
-                    <label asp-for="Description" class="form-label">活动描述</label>
+                    <label asp-for="Description">活动描述</label>
                     <textarea asp-for="Description" class="form-control" rows="4" placeholder="请输入活动详细描述..."></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">保存活动</button>
+                    <button type="submit" class="btn btn-primary">@(isEdit ? "保存修改" : "发布活动")</button>
                     <a asp-action="Index" class="btn btn-outline-secondary">取消</a>
                 </div>
             </div>

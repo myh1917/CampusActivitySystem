@@ -17,14 +17,14 @@ namespace CampusActivitySystem.Filters
         }
     }
 
-    // [Role("admin")]：必须有指定角色才能访问
+    // [Role("admin,organizer")]：允许指定角色（用逗号分隔）
     public class RoleAttribute : Attribute, IAuthorizationFilter
     {
-        private readonly string _role;
+        private readonly string[] _roles;
 
-        public RoleAttribute(string role)
+        public RoleAttribute(string roles)
         {
-            _role = role;
+            _roles = roles.Split(',', StringSplitOptions.RemoveEmptyEntries);
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -36,13 +36,15 @@ namespace CampusActivitySystem.Filters
                 return;
             }
 
-            // 从 Session 读取角色列表
             var rolesStr = context.HttpContext.Session.GetString("Roles");
-            var roles = string.IsNullOrEmpty(rolesStr)
-                ? Array.Empty<string>()
-                : rolesStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            if (string.IsNullOrEmpty(rolesStr))
+            {
+                context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
+                return;
+            }
 
-            if (!roles.Contains(_role))
+            var userRoles = rolesStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            if (!userRoles.Any(r => _roles.Contains(r)))
             {
                 context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
             }

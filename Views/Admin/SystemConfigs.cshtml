@@ -1,46 +1,81 @@
 @model List<CampusActivitySystem.Models.SystemConfig>
-
 @{
     ViewData["Title"] = "系统配置";
 }
 
-<h2>系统配置</h2>
+<h2 class="mb-4"><i class="bi bi-sliders"></i> 系统配置</h2>
 
-<form method="post" class="mb-4">
-    <div class="form-row">
-        <div class="col-md-3">
-            <input type="text" name="key" class="form-control" placeholder="配置键" required />
-        </div>
-        <div class="col-md-3">
-            <input type="text" name="value" class="form-control" placeholder="配置值" required />
-        </div>
-        <div class="col-md-4">
-            <input type="text" name="description" class="form-control" placeholder="描述" />
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">保存配置</button>
-        </div>
-    </div>
-</form>
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> 以下配置控制系统的全局行为，修改后即时生效。请谨慎操作。
+</div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>配置键</th>
-            <th>配置值</th>
-            <th>描述</th>
-            <th>更新时间</th>
-        </tr>
-    </thead>
-    <tbody>
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">暂无配置项。</div>
+}
+else
+{
+    <div class="row">
         @foreach (var config in Model)
         {
-            <tr>
-                <td>@config.ConfigKey</td>
-                <td>@config.ConfigValue</td>
-                <td>@config.Description</td>
-                <td>@config.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
-            </tr>
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-light">
+                        <span class="fw-bold">@config.ConfigKey</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small">@config.Description</p>
+                        <form method="post" asp-action="SystemConfigs" asp-controller="Admin">
+                            <input type="hidden" name="key" value="@config.ConfigKey" />
+                            <input type="hidden" name="description" value="@config.Description" />
+
+                            @switch (config.ConfigKey)
+                            {
+                                case "AllowRegister":
+                                case "MaintenanceMode":
+                                    // 布尔值下拉菜单
+                                    <div class="input-group mb-2">
+                                        <select name="value" class="form-select">
+                                            <!option value="true" selected="@(config.ConfigValue == "true")">是 (true)</!option>
+                                            <!option value="false" selected="@(config.ConfigValue == "false")">否 (false)</!option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">保存</button>
+                                    </div>
+                                    break;
+                                case "MaxActivityPerUser":
+                                    // 数字下拉菜单
+                                    <div class="input-group mb-2">
+                                        <select name="value" class="form-select">
+                                            @for (int i = 1; i <= 20; i++)
+                                            {
+                                                <!option value="@i" selected="@(config.ConfigValue == i.ToString())">@i</!option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">保存</button>
+                                    </div>
+                                    break;
+                                case "SiteName":
+                                    // 文本框
+                                    <div class="input-group mb-2">
+                                        <input type="text" name="value" class="form-control" value="@config.ConfigValue" />
+                                        <button type="submit" class="btn btn-primary">保存</button>
+                                    </div>
+                                    break;
+                                default:
+                                    // 其他键使用文本框
+                                    <div class="input-group mb-2">
+                                        <input type="text" name="value" class="form-control" value="@config.ConfigValue" />
+                                        <button type="submit" class="btn btn-primary">保存</button>
+                                    </div>
+                                    break;
+                            }
+                        </form>
+                        <div class="text-muted small mt-1">
+                            最后更新：@config.UpdatedAt.ToString("yyyy-MM-dd HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+}

@@ -13,7 +13,7 @@ namespace CampusActivitySystem.Models
         public string Category { get; set; }
         public long OrganizerId { get; set; }
         [ForeignKey("OrganizerId")] public User Organizer { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = "";
         [Required, MaxLength(255)]
         public string Location { get; set; }
         public int Capacity { get; set; }

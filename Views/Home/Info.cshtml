@@ -1,7 +1,7 @@
-﻿@{
+﻿@model CampusActivitySystem.Models.User
+@{
     ViewData["Title"] = "个人信息";
 }
-@model CampusActivitySystem.Models.User
 
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -25,73 +25,38 @@
                     <form method="post" action="/Account/Info">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">账号</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" class="form-control" value="@Model.Account" disabled>
-                            </div>
+                            <input type="text" class="form-control" value="@Model.Account" disabled>
                             <small class="text-muted">账号不可修改</small>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">姓名</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" name="name" class="form-control" value="@Model.Name" required>
-                            </div>
+                            <input type="text" name="name" class="form-control" value="@Model.Name" required>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">学号</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
-                                <input type="text" class="form-control" value="@Model.StudentNo" disabled>
-                            </div>
+                            <label class="form-label fw-semibold">学号/工号</label>
+                            <input type="text" class="form-control" value="@Model.StudentNo" disabled>
                             <small class="text-muted">学号不可修改</small>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">学院</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-building"></i></span>
-                                <input type="text" name="college" class="form-control" value="@Model.College" placeholder="请输入学院" required>
-                            </div>
+                            <input type="text" name="college" class="form-control" value="@Model.College" placeholder="请输入学院" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">手机号</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-phone"></i></span>
-                                <input type="text" name="phone" class="form-control" value="@Model.Phone" placeholder="请输入手机号">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">状态</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-toggle-on"></i></span>
-                                @if (Model.Status == "ACTIVE")
-                                {
-                                    <input type="text" class="form-control text-success" value="✅ 已激活" disabled>
-                                }
-                                else
-                                {
-                                    <input type="text" class="form-control text-danger" value="⛔ 已禁用" disabled>
-                                }
-                            </div>
+                            <input type="text" name="phone" class="form-control" value="@Model.Phone" placeholder="请输入手机号">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">角色</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-shield"></i></span>
-                                <input type="text" class="form-control" value="@(Model.UserRoles?.FirstOrDefault()?.Role?.Name ?? "无")" disabled>
-                            </div>
+                            <input type="text" class="form-control" value="@(Model.UserRoles?.FirstOrDefault()?.Role?.Name ?? "无")" disabled>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary py-2">
-                                <i class="bi bi-save"></i> 保存修改
-                            </button>
+                            <button type="submit" class="btn btn-primary py-2"><i class="bi bi-save"></i> 保存修改</button>
                             <a href="/" class="btn btn-outline-secondary">返回首页</a>
                         </div>
                     </form>

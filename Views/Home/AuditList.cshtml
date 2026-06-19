@@ -1,0 +1,49 @@
+﻿@model List<CampusActivitySystem.Models.Registration>
+@{
+    ViewData["Title"] = "报名审核";
+}
+
+<h3 class="mb-4"><i class="bi bi-clipboard-check"></i> 报名审核列表</h3>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">暂无待审核的报名</div>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>活动</th>
+                <th>报名人</th>
+                <th>报名时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reg in Model)
+            {
+                <tr>
+                    <td>@reg.Activity?.Title</td>
+                    <td>@reg.User?.Name</td>
+                    <td>@reg.RegisteredAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>
+                        <form asp-action="Approve" method="post" style="display:inline">
+                            <input type="hidden" name="registrationId" value="@reg.Id" />
+                            <button type="submit" class="btn btn-sm btn-success">通过</button>
+                        </form>
+                        <form asp-action="Reject" method="post" style="display:inline">
+                            <input type="hidden" name="registrationId" value="@reg.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">拒绝</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

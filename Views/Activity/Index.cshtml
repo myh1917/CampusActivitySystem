@@ -5,22 +5,29 @@
 
 @if (TempData["Success"] != null)
 {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show">
         @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 @if (TempData["Error"] != null)
 {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show">
         @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold"><i class="bi bi-calendar-event"></i> 全部活动</h2>
-    <a asp-action="Create" asp-controller="Activity" class="btn btn-primary"><i class="bi bi-plus-circle"></i> 发布活动</a>
+    @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+    {
+        var roles = Context.Session.GetString("Roles") ?? "";
+        if (roles.Contains("admin") || roles.Contains("organizer"))
+        {
+            <a asp-controller="Activity" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> 发布活动</a>
+        }
+    }
 </div>
 
 <form asp-action="Index" asp-controller="Activity" method="get">
@@ -34,30 +41,9 @@
         <div class="col-md-3 mb-2">
             <select name="category" class="form-select">
                 <option value="">全部类别</option>
-                @if (Context.Request.Query["category"] == "讲座")
-                {
-                        <option value="讲座" selected>讲座</option>
-                }
-                else
-                {
-                        <option value="讲座">讲座</option>
-                }
-                @if (Context.Request.Query["category"] == "竞赛")
-                {
-                        <option value="竞赛" selected>竞赛</option>
-                }
-                else
-                {
-                        <option value="竞赛">竞赛</option>
-                }
-                @if (Context.Request.Query["category"] == "社团活动")
-                {
-                        <option value="社团活动" selected>社团活动</option>
-                }
-                else
-                {
-                        <option value="社团活动">社团活动</option>
-                }
+                <!option value="讲座" selected="@(Context.Request.Query["category"] == "讲座")">讲座</!option>
+                <!option value="竞赛" selected="@(Context.Request.Query["category"] == "竞赛")">竞赛</!option>
+                <!option value="社团活动" selected="@(Context.Request.Query["category"] == "社团活动")">社团活动</!option>
             </select>
         </div>
     </div>
@@ -66,33 +52,59 @@
 <div class="row">
     @if (Model != null && Model.Any())
     {
+        var userIdStr = Context.Session.GetString("UserId");
+        long currentUserId = 0;
+        long.TryParse(userIdStr, out currentUserId);
+        var rolesStr = Context.Session.GetString("Roles") ?? "";
+        bool isAdmin = rolesStr.Contains("admin");
+        bool isOrganizer = rolesStr.Contains("organizer");
+
         foreach (var item in Model)
         {
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body">
-                                <span class="badge bg-primary float-end">@item.Category</span>
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text text-muted">
-                                    <i class="bi bi-geo-alt"></i> @item.Location<br>
-                                    <i class="bi bi-clock"></i> @item.StartTime.ToString("yyyy-MM-dd HH:mm")
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success"><i class="bi bi-people"></i> @item.RegisteredCount/@item.Capacity</span>
-                                    <form asp-controller="Registration" asp-action="Register" method="post">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm card-clickable">
+                    <!-- 透明覆盖链接，使整个卡片可点击 -->
+                    <a asp-controller="Activity" asp-action="Detail" asp-route-id="@item.Id" class="card-link-cover"></a>
+
+                    <div class="card-body">
+                        <span class="badge bg-primary float-end">@item.Category</span>
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text text-muted">
+                            <i class="bi bi-geo-alt"></i> @item.Location<br>
+                            <i class="bi bi-clock"></i> @item.StartTime.ToString("yyyy-MM-dd HH:mm")
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-success"><i class="bi bi-people"></i> @item.RegisteredCount/@item.Capacity</span>
+                            <div class="btn-group" style="position:relative; z-index:2;">
+                                @* 报名按钮 *@
+                                @if (!string.IsNullOrEmpty(userIdStr) && item.Status == "PUBLISHED")
+                                {
+                                    <form asp-controller="Registration" asp-action="Register" method="post" class="me-1">
                                         <input type="hidden" name="activityId" value="@item.Id" />
                                         <button type="submit" class="btn btn-outline-primary btn-sm">立即报名</button>
                                     </form>
-                                </div>
+                                }
+                                @* 发布者或管理员看到编辑按钮 *@
+                                @if (isAdmin || (isOrganizer && item.OrganizerId == currentUserId))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm me-1">编辑</a>
+                                    <form asp-action="Delete" method="post" style="display:inline"
+                                          onsubmit="return confirm('确定删除该活动吗？');">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">删除</button>
+                                    </form>
+                                }
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
         }
     }
     else
     {
-            <div class="col-12">
-                <div class="alert alert-info">暂时没有活动，去发布一个吧！</div>
-            </div>
+        <div class="col-12">
+            <div class="alert alert-info">暂时没有活动，去发布一个吧！</div>
+        </div>
     }
 </div>

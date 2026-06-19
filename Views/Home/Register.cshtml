@@ -2,12 +2,22 @@
     ViewData["Title"] = "注册";
 }
 
+@if (TempData["RegisterSuccess"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-circle-fill"></i> @TempData["RegisterSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+}
+
 <div class="row justify-content-center mt-4">
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-sm border-0 rounded-4">
             <div class="card-body p-4 p-md-5">
                 <h4 class="text-center mb-4"><i class="bi bi-person-plus-fill" style="color:#667eea;"></i> 账号注册</h4>
-                
+
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="alert alert-danger">
@@ -15,10 +25,24 @@
                     </div>
                 }
 
+                @if (ViewBag.AllowRegister != null && !(bool)ViewBag.AllowRegister)
+                {
+                    <div class="alert alert-warning text-center">
+                        <i class="bi bi-exclamation-triangle"></i> 注册功能已关闭，请联系管理员。
+                    </div>
+                }
+
                 <form method="post" action="/Account/Register">
                     <div class="mb-3">
-                        <label class="form-label">学号</label>
-                        <input type="text" name="studentNo" class="form-control" placeholder="请输入学号" required>
+                        <label class="form-label">角色</label>
+                        <select name="role" class="form-select" required>
+                            <option value="student">学生</option>
+                            <option value="organizer">活动负责人</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">学号 / 工号</label>
+                        <input type="text" name="studentNo" class="form-control" placeholder="请输入学号或工号" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">姓名</label>
@@ -36,10 +60,10 @@
                         <label class="form-label">手机号</label>
                         <input type="text" name="phone" class="form-control" placeholder="选填">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2">注 册</button>
+                    <button type="submit" class="btn btn-primary w-100 py-2" @(ViewBag.AllowRegister == false ? "disabled" : "")>注 册</button>
                 </form>
                 <div class="text-center mt-3">
-                    <p class="text-muted">已有账号？ <a href="/Home/Login">立即登录</a></p>
+                    <p class="text-muted">已有账号？ <a href="/Account/Login">立即登录</a></p>
                 </div>
             </div>
         </div>

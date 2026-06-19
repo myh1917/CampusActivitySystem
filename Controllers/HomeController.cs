@@ -1,84 +1,75 @@
-using Microsoft.AspNetCore.Mvc;
+using CampusActivitySystem.Data;
 using CampusActivitySystem.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CampusActivitySystem.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly AppDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, AppDbContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    [AllowAnonymous]
+    public IActionResult Maintenance()
     {
         return View();
     }
-
-    public IActionResult Privacy()
+    // 首页：展示最近的活动
+    public async Task<IActionResult> Index()
     {
-        return View();
+        // 检查维护模式
+        var maintenance = await _context.SystemConfigs
+            .FirstOrDefaultAsync(c => c.ConfigKey == "MaintenanceMode");
+        if (maintenance != null && maintenance.ConfigValue == "true")
+        {
+            // 只有管理员可以访问
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId) || !User.IsInRole("admin"))
+            {
+                return View("Maintenance");
+            }
+        }
+
+        var activities = await _context.Activities
+            .Where(a => a.Status == "PUBLISHED")
+            .OrderByDescending(a => a.CreatedAt)
+            .Take(6)
+            .ToListAsync();
+        return View(activities);
     }
+
+    public IActionResult Privacy() => View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
-    }
+    public IActionResult Error() => View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
 
     public IActionResult Logout()
     {
-        HttpContext.Session.Clear();   // 清除所有 Session 数据
+        HttpContext.Session.Clear();
         return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult MyActivities()
-    {
-        return View();
-    }
-    
-    public IActionResult AccessDenied() //访问活动管理失败
-    {
-        return View();
-    }
+    public IActionResult AccessDenied() => View();
 
-    // ============ 预览用Action，正式开发后可以删除 ============
-    public IActionResult Login()
-    {
-        return View();
-    }
-    public IActionResult Register()
-    {
-        return View();
-    }
-    public IActionResult ActivityList()
-    {
-        return View();
-    }
-  /*  public IActionResult ActivityDetail()
-    {
-        return View(); // 后期会接收id参数，现在先预览
-    }*/
-    public IActionResult SignIn()
-    {
-        return View();
-    }
-    // ============ 预览用Action（全部页面）============
-    public IActionResult ActivityDetail() => View();
-    public IActionResult Profile() => View();           // 个人信息
-    public IActionResult MyRegistrations() => View();   // 我的报名
-    public IActionResult AdminIndex() => View();        // 后台首页
-    //public IActionResult AdminUserList() => View();     // 用户管理
-    public IActionResult AdminActivityManage() => View();// 活动管理
-    public IActionResult SignControl() => View();       // 签到控制台
-    public IActionResult Statistics() => View();        // 统计导出
-    public IActionResult Notices() => View();           // 通知中心
-    public IActionResult FakeLogin()
-    {
-        HttpContext.Session.SetInt32("UserId", 2); // 假设学生ID=2，请确保数据库中有该用户
-        return RedirectToAction("Index", "Activity");
-    }
-
+    // ======= 以下预览 Action 部分保留，避免其他页面 404，但可以重定向 =======
+    public IActionResult Login() => RedirectToAction("Login", "Account");
+    public IActionResult Register() => RedirectToAction("Register", "Account");
+    public IActionResult ActivityList() => RedirectToAction("Index", "Activity");
+    public IActionResult SignIn() => View();                 // 签到页暂时保留静态
+    public IActionResult Profile() => RedirectToAction("Info", "Account");
+    public IActionResult MyRegistrations() => RedirectToAction("MyRegistrations", "Registration");
+    public IActionResult AdminIndex() => View();             // 后台首页静态
+    public IActionResult AdminActivityManage() => RedirectToAction("Create", "Activity");
+    public IActionResult SignControl() => View();            // 签到控制台静态
+    public IActionResult Statistics() => View();             // 统计导出静态
+    public IActionResult Notices() => RedirectToAction("Index", "Notice");
+    public IActionResult MyActivities() => View();           // 我的活动静态（可后续完善）
 }

@@ -1,4 +1,5 @@
 using CampusActivitySystem.Data;
+using CampusActivitySystem.Filters;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -8,7 +9,13 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     EnvironmentName = "Development"
 });
 
-builder.Services.AddControllersWithViews();
+// 注册过滤器
+builder.Services.AddScoped<MaintenanceFilter>();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.AddService<MaintenanceFilter>();   // 全局生效
+});
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDistributedMemoryCache();

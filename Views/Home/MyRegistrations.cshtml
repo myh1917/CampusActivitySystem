@@ -1,87 +1,118 @@
+@model List<CampusActivitySystem.Models.Registration>
 @{
     ViewData["Title"] = "我的报名";
-
-    // ============ 模拟状态 ============
-    // 正式开发时删除此行，由后端传入真实数据
-    // 这里我们模拟三条报名记录，其中一条已签到、一条未签到、一条已取消
 }
 
 <h3 class="mb-4"><i class="bi bi-journal-check"></i> 我的报名记录</h3>
 
-<div class="table-responsive">
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>活动名称</th>
-                <th>状态</th>
-                <th>报名时间</th>
-                <th>签到</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- 报名记录1：未签到，可取消 -->
-            <tr>
-                <td><a href="/Home/ActivityDetail">人工智能技术讲座</a></td>
-                <td><span class="badge bg-success">已报名</span></td>
-                <td>2026-06-12</td>
-                <td><span class="badge bg-warning text-dark">未签到</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
-                        取消报名
-                    </button>
-                </td>
-            </tr>
-            <!-- 报名记录2：已签到，不可取消 -->
-            <tr>
-                <td><a href="#">校园歌手大赛</a></td>
-                <td><span class="badge bg-success">已报名</span></td>
-                <td>2026-06-10</td>
-                <td><span class="badge bg-success">已签到</span></td>
-                <td>
-                    <span class="text-muted">不可取消</span>
-                </td>
-            </tr>
-            <!-- 报名记录3：已取消 -->
-            <tr>
-                <td><a href="#">社区志愿服务</a></td>
-                <td><span class="badge bg-secondary">已取消</span></td>
-                <td>2026-06-08</td>
-                <td>-</td>
-                <td>
-                    <span class="text-muted">-</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 取消报名确认弹窗 -->
-<div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 border-0 shadow">
-            <div class="modal-header border-0">
-                <h5 class="modal-title"><i class="bi bi-exclamation-triangle text-warning"></i> 确认取消报名</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p>你确定要取消报名 <strong>"人工智能技术讲座"</strong> 吗？</p>
-                <p class="text-muted small">取消后如果活动名额已满，重新报名可能无法成功。</p>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">暂不取消</button>
-                <button type="button" class="btn btn-danger" id="confirmCancelBtn">确认取消</button>
-            </div>
-        </div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
-<script>// 模拟取消报名操作，正式对接后端时替换为真实 AJAX 或表单提交
-    document.getElementById('confirmCancelBtn').addEventListener('click', function() {
-        // 这里将来改成发送取消请求，成功后关闭弹窗并刷新页面
-        alert('取消成功！(模拟)');
-        // 关闭弹窗
-        var modal = bootstrap.Modal.getInstance(document.getElementById('cancelModal'));
-        modal.hide();
-        // 实际开发时可以在这里重新加载表格或跳转
-    });</script>
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">暂无报名记录，去<a asp-controller="Activity" asp-action="Index">活动列表</a>报名吧！</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>活动名称</th>
+                    <th>状态</th>
+                    <th>报名时间</th>
+                    <th>签到</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reg in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (reg.Activity != null)
+                            {
+                                <a asp-controller="Activity" asp-action="Detail" asp-route-id="@reg.ActivityId">@reg.Activity.Title</a>
+                            }
+                            else
+                            {
+                                <span>(活动已删除)</span>
+                            }
+                        </td>
+                        <td>
+                            @switch (reg.Status)
+                            {
+                                case "REGISTERED":
+                                    <span class="badge bg-success">已报名</span>
+                                    break;
+                                case "PENDING":
+                                    <span class="badge bg-warning text-dark">待审核</span>
+                                    break;
+                                case "CHECKED_IN":
+                                    <span class="badge bg-info">已签到</span>
+                                    break;
+                                case "CANCELLED":
+                                    <span class="badge bg-secondary">已取消</span>
+                                    break;
+                                case "REJECTED":
+                                    <span class="badge bg-danger">已拒绝</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-light text-dark">@reg.Status</span>
+                                    break;
+                            }
+                        </td>
+                        <td>@reg.RegisteredAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            @if (reg.Status == "CHECKED_IN")
+                            {
+                                <span class="badge bg-success">已签到</span>
+                            }
+                            else if (reg.Status == "REGISTERED")
+                            {
+                                <span class="badge bg-warning text-dark">未签到</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (reg.Status == "REGISTERED" || reg.Status == "PENDING")
+                            {
+                                <form asp-controller="Registration" asp-action="Cancel" method="post"
+                                      onsubmit="return confirm('确定要取消报名【@reg.Activity?.Title】吗？');">
+                                    <input type="hidden" name="registrationId" value="@reg.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">取消报名</button>
+                                </form>
+                                @if (reg.Status == "CANCELLED" || reg.Status == "REJECTED")
+                                {
+                                    <form asp-controller="Registration" asp-action="Register" method="post" class="mt-1">
+                                        <input type="hidden" name="activityId" value="@reg.ActivityId" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">重新报名</button>
+                                    </form>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

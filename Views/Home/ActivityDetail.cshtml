@@ -1,46 +1,112 @@
+@model CampusActivitySystem.Models.Activity
 @{
-    ViewData["Title"] = "活动详情";
+    ViewData["Title"] = Model.Title;
+    // 获取当前用户信息
+    var userIdStr = Context.Session.GetString("UserId");
+    long currentUserId = 0;
+    long.TryParse(userIdStr, out currentUserId);
+    var rolesStr = Context.Session.GetString("Roles") ?? "";
+    bool isAdmin = rolesStr.Contains("admin");
+    bool isOrganizer = rolesStr.Contains("organizer");
+    bool isOwner = currentUserId > 0 && currentUserId == Model.OrganizerId;
+    var isRegistered = ViewBag.IsRegistered as bool? ?? false;
 }
 
 <div class="row">
-    <!-- 左侧活动信息 -->
+    <!-- 左侧活动详细 -->
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-start mb-3">
-                    <h2 class="fw-bold">人工智能技术讲座</h2>
-                    <span class="badge bg-primary fs-6">讲座</span>
+                    <h2 class="fw-bold">@Model.Title</h2>
+                    <span class="badge bg-primary fs-6">@Model.Category</span>
                 </div>
                 <div class="mb-3">
-                    <span class="badge bg-success me-2">报名中</span>
-                    <span class="text-muted"><i class="bi bi-people"></i> 已报 45/100 人</span>
+                    <span class="badge bg-success me-2">@Model.Status</span>
+                    <span class="text-muted"><i class="bi bi-people"></i> 已报 @Model.RegisteredCount / @Model.Capacity 人</span>
+                    @if (Model.NeedAudit)
+                    {
+                        <span class="badge bg-warning ms-2">需审核</span>
+                    }
                 </div>
                 <hr>
                 <div class="row mb-3">
-                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-geo-alt"></i> 地点：</strong>图书馆报告厅</div>
-                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-clock"></i> 活动时间：</strong>2026-06-15 14:00 - 16:00</div>
-                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-calendar-plus"></i> 报名截止：</strong>2026-06-14 18:00</div>
-                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-person-check"></i> 负责人：</strong>张老师</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-geo-alt"></i> 地点：</strong> @Model.Location</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-clock"></i> 活动时间：</strong> @Model.StartTime.ToString("yyyy-MM-dd HH:mm") - @Model.EndTime.ToString("yyyy-MM-dd HH:mm")</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-calendar-plus"></i> 报名截止：</strong> @Model.RegisterEnd.ToString("yyyy-MM-dd HH:mm")</div>
+                    <div class="col-sm-6 mb-2"><strong><i class="bi bi-person-check"></i> 发布者：</strong> @(Model.Organizer?.Name ?? "未知")</div>
                 </div>
-                <h5>活动介绍</h5>
-                <p>本次讲座将探讨人工智能技术的最新发展及其在各行业的应用，包括机器学习、深度学习、自然语言处理等领域的前沿动态。欢迎全校同学参加！</p>
+                <h5>活动简介</h5>
+                <p>@Model.Description</p>
+
+                @if (isAdmin || isOwner)
+                {
+                    <div class="mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm me-2">
+                            <i class="bi bi-pencil"></i> 编辑活动
+                        </a>
+                        <form asp-action="Delete" method="post" style="display:inline" onsubmit="return confirm('确定删除该活动吗？');">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> 删除活动</button>
+                        </form>
+                    </div>
+                }
             </div>
         </div>
     </div>
+
     <!-- 右侧操作区 -->
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 20px;">
             <div class="card-body text-center p-4">
-                <h5 class="card-title">报名参加</h5>
-                <div class="display-4 text-muted my-3">45/100</div>
+                <h5 class="card-title">立即参加</h5>
+                <div class="display-4 text-muted my-3">@Model.RegisteredCount / @Model.Capacity</div>
                 <div class="progress mb-4" style="height: 10px;">
-                    <div class="progress-bar bg-success" style="width: 45%"></div>
+                    <div class="progress-bar bg-success" style="width: @(Model.Capacity > 0 ? (int)((double)Model.RegisteredCount / Model.Capacity * 100) : 0)%"></div>
                 </div>
-                <!-- 未登录时不显示报名按钮 -->
-                <button class="btn btn-primary btn-lg w-100">立即报名</button>
-                <p class="text-muted small mt-2">报名截止：2026-06-14 18:00</p>
+
+                @if (!string.IsNullOrEmpty(userIdStr))
+                {
+                    if (Model.Status == "PUBLISHED")
+                    {
+                        if (isRegistered)
+                        {
+                            <button class="btn btn-success btn-lg w-100" disabled>已报名</button>
+                            <p class="text-muted small mt-2">您已成功报名，请按时参加</p>
+                        }
+                        else if (Model.RegisteredCount >= Model.Capacity)
+                        {
+                            <button class="btn btn-secondary btn-lg w-100" disabled>名额已满</button>
+                        }
+                        else
+                        {
+                            <form asp-controller="Registration" asp-action="Register" method="post">
+                                <input type="hidden" name="activityId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    @if (Model.NeedAudit)
+                                    {
+                                        <span>提交报名（需审核）</span>
+                                    }
+                                    else
+                                    {
+                                        <span>立即报名</span>
+                                    }
+                                </button>
+                            </form>
+                            <p class="text-muted small mt-2">报名截止：@Model.RegisterEnd.ToString("yyyy-MM-dd HH:mm")</p>
+                        }
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-lg w-100" disabled>活动已结束</button>
+                    }
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn btn-primary btn-lg w-100">请登录后报名</a>
+                }
                 <hr>
-                <a href="/Home/SignIn" class="btn btn-outline-success w-100"><i class="bi bi-check-circle"></i> 进入签到</a>
+                <a href="/Home/SignIn" class="btn btn-outline-success w-100"><i class="bi bi-check-circle"></i> 去签到处</a>
             </div>
         </div>
     </div>

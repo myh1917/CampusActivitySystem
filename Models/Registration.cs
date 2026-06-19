@@ -14,8 +14,8 @@ namespace CampusActivitySystem.Models
         [MaxLength(24)]
         public string Status { get; set; } = "PENDING";
         public int? WaitNo { get; set; }
-        public string FormData { get; set; }
-        public string AuditComment { get; set; }
+        public string FormData { get; set; } = "";   
+        public string AuditComment { get; set; } = "";    
         public DateTime RegisteredAt { get; set; } = DateTime.Now;
         public DateTime? CancelledAt { get; set; }
         public DateTime? CheckinAt { get; set; }

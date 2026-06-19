@@ -149,3 +149,49 @@ body {
     position: relative;
     z-index: 2;
 }
+/* 卡片可点击 */
+.card-clickable {
+    position: relative;
+    cursor: pointer;
+}
+
+.card-link-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 保证卡片内的按钮、表单等不被覆盖层遮挡 */
+.card-clickable .btn,
+.card-clickable .badge,
+.card-clickable form,
+.card-clickable .input-group {
+    position: relative;
+    z-index: 2;
+}
+
+/* 确保导航栏始终在最上层 */
+.navbar.sticky-top {
+    z-index: 1030 !important;
+}
+
+/* 导航栏内的下拉菜单也要高于其他内容 */
+.navbar .dropdown-menu {
+    z-index: 1040 !important;
+    position: absolute;
+}
+
+/* 活动详情页右侧的 sticky 卡片，层级要低于导航栏 */
+.sticky-top {
+    z-index: 1010 !important;
+}
+
+/* 如果有其他 sticky 元素，让它们都比导航栏低 */
+.navbar.sticky-top ~ * .sticky-top {
+    z-index: 1010 !important;
+}
