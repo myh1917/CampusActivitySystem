@@ -1,4 +1,4 @@
-﻿using CampusActivitySystem.Data;
+using CampusActivitySystem.Data;
 using CampusActivitySystem.Filters;
 using CampusActivitySystem.Models;
 using CampusActivitySystem.Services;

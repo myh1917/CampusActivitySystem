@@ -1,0 +1,142 @@
+@model CampusActivitySystem.Models.ViewModels.SignControlViewModel
+@{
+    ViewData["Title"] = "签到控制台";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="bi bi-qr-code"></i> 签到控制台</h3>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-activityId="@Model.SelectedActivity?.Id"
+       class="btn btn-outline-primary"><i class="bi bi-bar-chart"></i> 统计与导出</a>
+</div>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+@if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
+<form method="get" class="card card-body border-0 shadow-sm mb-4">
+    <label class="form-label fw-bold">选择活动</label>
+    <select name="activityId" class="form-select" onchange="this.form.submit()">
+        @foreach (var activity in Model.Activities)
+        {
+            <option value="@activity.Id" selected="@(activity.Id == Model.SelectedActivity?.Id)">
+                @activity.Title
+            </option>
+        }
+    </select>
+</form>
+
+@if (Model.SelectedActivity == null)
+{
+    <div class="alert alert-info">暂无可管理的活动，请先发布活动。</div>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4>@Model.SelectedActivity.Title</h4>
+                    <p class="text-muted"><i class="bi bi-geo-alt"></i> @Model.SelectedActivity.Location</p>
+                    @if (Model.ActiveSession == null)
+                    {
+                        <div class="alert alert-secondary">当前没有进行中的签到。</div>
+                        <form asp-action="Start" method="post" class="row g-2 align-items-end">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="activityId" value="@Model.SelectedActivity.Id" />
+                            <div class="col-sm-6">
+                                <label class="form-label">签到有效时长</label>
+                                <select name="durationMinutes" class="form-select">
+                                    <option value="10">10分钟</option>
+                                    <option value="30" selected>30分钟</option>
+                                    <option value="60">60分钟</option>
+                                    <option value="120">120分钟</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6"><button class="btn btn-primary w-100" type="submit">开启签到</button></div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success d-flex justify-content-between align-items-center">
+                            <span>签到进行中，结束时间：@Model.ActiveSession.EndTime.ToString("yyyy-MM-dd HH:mm")</span>
+                            <form asp-action="Close" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="sessionId" value="@Model.ActiveSession.Id" />
+                                <button class="btn btn-sm btn-danger" type="submit">关闭签到</button>
+                            </form>
+                        </div>
+                        <div class="row align-items-center text-center">
+                            <div class="col-md-7">
+                                <img src="@Url.Action("QrCode", "SignIn", new { sessionId = Model.ActiveSession.Id })"
+                                     class="img-fluid border rounded p-2" alt="签到二维码" style="max-width:280px" />
+                                <p class="small text-muted mt-2">学生可使用系统相机或手机相机扫描</p>
+                            </div>
+                            <div class="col-md-5">
+                                <p class="text-muted mb-1">6位签到码</p>
+                                <div class="display-5 fw-bold text-primary font-monospace">@Model.SignCode</div>
+                            </div>
+                        </div>
+                        <hr />
+                        <h5>手动补签</h5>
+                        <form asp-action="Manual" method="post" class="row g-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="sessionId" value="@Model.ActiveSession.Id" />
+                            <div class="col-md-4"><input name="account" class="form-control" placeholder="学生账号或学号" required /></div>
+                            <div class="col-md-5"><input name="reason" class="form-control" placeholder="补签原因" required /></div>
+                            <div class="col-md-3"><button class="btn btn-outline-secondary w-100" type="submit">确认补签</button></div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body">
+                    <h5>签到进度</h5>
+                    <div class="display-6"><span id="signedCount">@Model.SignedCount</span> / <span id="registeredCount">@Model.RegisteredCount</span></div>
+                    <hr />
+                    <h6>最近签到</h6>
+                    <div id="liveList" class="list-group list-group-flush">
+                        @foreach (var item in Model.RecentSignIns)
+                        {
+                            <div class="list-group-item px-0">
+                                <strong>@item.Registration.User.Name</strong>
+                                <span class="text-muted small">@item.CheckedAt.ToString("HH:mm:ss")</span>
+                                <span class="badge bg-secondary float-end">@item.Method</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @if (Model.ActiveSession != null)
+    {
+        <script>
+            const liveUrl = '@Url.Action("Live", "SignIn", new { sessionId = Model.ActiveSession.Id })';
+            const methodNames = { QR: '二维码', CODE: '签到码', MANUAL: '手动' };
+            async function refreshLive() {
+                try {
+                    const response = await fetch(liveUrl);
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    document.getElementById('signedCount').textContent = data.signed;
+                    document.getElementById('registeredCount').textContent = data.registered;
+                    document.getElementById('liveList').innerHTML = data.rows.map(row =>
+                        `<div class="list-group-item px-0"><strong>${escapeHtml(row.name)}</strong> ` +
+                        `<span class="text-muted small">${row.checkedAt}</span>` +
+                        `<span class="badge bg-secondary float-end">${methodNames[row.method] || row.method}</span></div>`
+                    ).join('') || '<p class="text-muted">暂无签到记录</p>';
+                } catch { }
+            }
+            function escapeHtml(value) {
+                const element = document.createElement('div');
+                element.textContent = value;
+                return element.innerHTML;
+            }
+            setInterval(refreshLive, 3000);
+        </script>
+    }
+}

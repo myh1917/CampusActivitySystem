@@ -1,0 +1,48 @@
+@model string
+@{
+    ViewData["Title"] = "确认扫码签到";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-5 text-center">
+                <i class="bi bi-qr-code-scan display-3 text-primary"></i>
+                <h3 class="mt-3">确认扫码签到</h3>
+                @if (string.IsNullOrEmpty(Model))
+                {
+                    <div class="alert alert-danger mt-4">@(ViewBag.Error ?? "二维码无效")</div>
+                }
+                else
+                {
+                    <p class="text-muted">点击确认后，系统将检查报名和签到场次状态。</p>
+                    <form id="qrForm" asp-action="ByQr" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="token" value="@Model" />
+                        <button class="btn btn-primary btn-lg w-100" type="submit">确认签到</button>
+                    </form>
+                    <div id="resultAlert" class="alert mt-4 d-none"></div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const form = document.getElementById('qrForm');
+        if (form) form.addEventListener('submit', async event => {
+            event.preventDefault();
+            const box = document.getElementById('resultAlert');
+            try {
+                const response = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+                const result = await response.json();
+                box.className = `alert mt-4 ${result.success ? 'alert-success' : 'alert-danger'}`;
+                box.textContent = result.message;
+            } catch {
+                box.className = 'alert alert-danger mt-4';
+                box.textContent = '请求失败，请稍后重试';
+            }
+        });
+    </script>
+}

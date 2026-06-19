@@ -1,0 +1,67 @@
+@model CampusActivitySystem.Models.ViewModels.StatisticsViewModel
+@{
+    ViewData["Title"] = "统计与导出";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="bi bi-bar-chart-line"></i> 签到统计</h3>
+    @if (Model.SelectedActivity != null)
+    {
+        <a asp-controller="SignIn" asp-action="Control" asp-route-activityId="@Model.SelectedActivity.Id"
+           class="btn btn-outline-secondary">返回签到控制台</a>
+    }
+</div>
+
+<form method="get" class="card card-body border-0 shadow-sm mb-4">
+    <label class="form-label fw-bold">选择活动</label>
+    <select name="activityId" class="form-select" onchange="this.form.submit()">
+        @foreach (var activity in Model.Activities)
+        {
+            <option value="@activity.Id" selected="@(activity.Id == Model.SelectedActivity?.Id)">@activity.Title</option>
+        }
+    </select>
+</form>
+
+@if (Model.SelectedActivity == null)
+{
+    <div class="alert alert-info">暂无可统计的活动。</div>
+}
+else
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card border-0 shadow-sm text-center"><div class="card-body"><div class="text-muted">有效报名</div><div class="display-6 text-primary">@Model.RegisteredCount</div></div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm text-center"><div class="card-body"><div class="text-muted">已签到</div><div class="display-6 text-success">@Model.SignedCount</div></div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm text-center"><div class="card-body"><div class="text-muted">未签到</div><div class="display-6 text-danger">@Model.UnsignedCount</div></div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm text-center"><div class="card-body"><div class="text-muted">签到率</div><div class="display-6 text-info">@Model.SignRate.ToString("F1")%</div></div></div></div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body d-flex flex-wrap gap-3 justify-content-between align-items-center">
+            <div>二维码：<strong>@Model.QrCount</strong>　签到码：<strong>@Model.CodeCount</strong>　手动补签：<strong>@Model.ManualCount</strong></div>
+            <div class="d-flex gap-2">
+                <a asp-action="Export" asp-route-activityId="@Model.SelectedActivity.Id" asp-route-type="registration" class="btn btn-outline-primary">导出报名名单</a>
+                <a asp-action="Export" asp-route-activityId="@Model.SelectedActivity.Id" asp-route-type="signin" class="btn btn-success">导出签到名单</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead><tr><th>学号</th><th>姓名</th><th>学院</th><th>报名时间</th><th>签到状态</th><th>签到时间</th><th>方式</th></tr></thead>
+                <tbody>
+                    @foreach (var row in Model.Rows)
+                    {
+                        <tr>
+                            <td>@row.StudentNo</td><td>@row.Name</td><td>@row.College</td>
+                            <td>@row.RegisteredAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td><span class="badge @(row.IsSigned ? "bg-success" : "bg-secondary")">@(row.IsSigned ? "已签到" : "未签到")</span></td>
+                            <td>@(row.CheckedAt?.ToString("yyyy-MM-dd HH:mm:ss") ?? "-")</td>
+                            <td>@(row.Method == "QR" ? "二维码" : row.Method == "CODE" ? "签到码" : row.Method == "MANUAL" ? "手动补签" : "-")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
