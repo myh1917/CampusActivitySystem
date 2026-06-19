@@ -1,10 +1,12 @@
 using CampusActivitySystem.Data;
+using CampusActivitySystem.Filters;
 using CampusActivitySystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace CampusActivitySystem.Controllers
 {
+    [Auth]
+    [Role("admin")]
     public class AdminController : Controller
     {
         private readonly AppDbContext _context;
