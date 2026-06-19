@@ -38,6 +38,11 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    public IActionResult AccessDenied() //访问活动管理失败
+    {
+        return View();
+    }
 
     // ============ 预览用Action，正式开发后可以删除 ============
     public IActionResult Login()
@@ -65,7 +70,7 @@ public class HomeController : Controller
     public IActionResult Profile() => View();           // 个人信息
     public IActionResult MyRegistrations() => View();   // 我的报名
     public IActionResult AdminIndex() => View();        // 后台首页
-    public IActionResult AdminUserList() => View();     // 用户管理
+    //public IActionResult AdminUserList() => View();     // 用户管理
     public IActionResult AdminActivityManage() => View();// 活动管理
     public IActionResult SignControl() => View();       // 签到控制台
     public IActionResult Statistics() => View();        // 统计导出
