@@ -17,7 +17,7 @@ public class AccountController : Controller
         if (await _context.Users.AnyAsync(u => u.Account == account))
         {
             ModelState.AddModelError("", "账号已存在");
-            return View();
+            return View("~/Views/Home/Register.cshtml");
         }
         var user = new User
         {
@@ -25,7 +25,9 @@ public class AccountController : Controller
             PasswordHash = HashPassword(password),
             Name = name,
             StudentNo = studentNo,
-            Status = "ACTIVE"
+            Status = "ACTIVE",
+            College = "未填写",
+            Phone=""
         };
         _context.Users.Add(user);
         // 默认给 student 角色
@@ -34,7 +36,8 @@ public class AccountController : Controller
             _context.UserRoles.Add(new UserRole { User = user, Role = studentRole });
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Login");
+        TempData["RegisterSuccess"] = "注册成功！请登录您的账号";
+        return RedirectToAction("Login","Home");
     }
     private string HashPassword(string raw)
     {
@@ -53,7 +56,7 @@ public class AccountController : Controller
         if (user == null || user.Status != "ACTIVE")
         {
             ModelState.AddModelError("", "账号或密码错误");
-            return View();
+            return View("~/Views/Home/Login.cshtml");
         }
         // 写入 Session
         HttpContext.Session.SetString("UserId", user.Id.ToString());
