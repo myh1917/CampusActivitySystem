@@ -1,10 +1,10 @@
 @model CampusActivitySystem.Models.Activity
 @{
     bool isEdit = ViewBag.IsEdit ?? false;
-    ViewData["Title"] = isEdit ? "�༭�" : "�����";
+    ViewData["Title"] = isEdit ? "编辑活动" : "发布活动";
 }
 
-<h3 class="mb-4"><i class="bi bi-gear"></i> @(isEdit ? "�༭�" : "�����»")</h3>
+<h3 class="mb-4"><i class="bi bi-gear"></i> @(isEdit ? "编辑活动" : "发布新活动")</h3>
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-body">
         <form asp-action="@(isEdit ? "Edit" : "Create")" asp-controller="Activity" method="post">
@@ -17,60 +17,68 @@
 
             <div class="row g-3">
                 <div class="col-md-8">
-                    <label asp-for="Title" class="form-label">�����</label>
-                    <input asp-for="Title" class="form-control" placeholder="����������" required>
+                    <label asp-for="Title" class="form-label">活动标题</label>
+                    <input asp-for="Title" class="form-control" placeholder="请输入活动标题" required>
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="Category" class="form-label">���</label>
+                    <label asp-for="Category" class="form-label">类别</label>
                     <select asp-for="Category" class="form-select">
-                        <option value="����">����</option>
-                        <option value="����">����</option>
-                        <option value="���Ż">���Ż</option>
+                        <option value="">-- 请选择类别 --</option>
+                        <option value="讲座">讲座</option>
+                        <option value="竞赛">竞赛</option>
+                        <option value="社团活动">社团活动</option>
+                        <option value="文体活动">文体活动</option>
+                        <option value="志愿服务">志愿服务</option>
+                        <option value="学术研讨">学术研讨</option>
+                        <option value="就业创业">就业创业</option>
+                        <option value="文艺演出">文艺演出</option>
+                        <option value="体育运动">体育运动</option>
+                        <option value="其他">其他</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="Location" class="form-label">�ص�</label>
+                    <label asp-for="Location" class="form-label">地点</label>
                     <input asp-for="Location" class="form-control" required>
                 </div>
                 <div class="col-md-3">
-                    <label asp-for="Capacity" class="form-label">����</label>
+                    <label asp-for="Capacity" class="form-label">名额</label>
                     <input asp-for="Capacity" class="form-control" type="number" required min="1">
                 </div>
                 <div class="col-md-3">
-                    <label asp-for="NeedAudit" class="form-label">��Ҫ���</label>
+                    <label asp-for="NeedAudit" class="form-label">需要审核</label>
                     <select asp-for="NeedAudit" class="form-select">
-                        <option value="false">��ֱ�ӱ����ɹ���</option>
-                        <option value="true">�ǣ������Ա��ˣ�</option>
+                        <option value="false">否（直接报名成功）</option>
+                        <option value="true">是（需管理员审核）</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="RegisterStart">������ʼʱ��</label>
+                    <label asp-for="RegisterStart">报名开始时间</label>
                     <input asp-for="RegisterStart" class="form-control" type="datetime-local"
                            asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="RegisterEnd">��������ʱ��</label>
+                    <label asp-for="RegisterEnd">报名结束时间</label>
                     <input asp-for="RegisterEnd" class="form-control" type="datetime-local"
                            asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="StartTime">���ʼʱ��</label>
+                    <label asp-for="StartTime">活动开始时间</label>
                     <input asp-for="StartTime" class="form-control" type="datetime-local"
                            asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="EndTime">�����ʱ��</label>
+                    <label asp-for="EndTime">活动结束时间</label>
                     <input asp-for="EndTime" class="form-control" type="datetime-local"
                            asp-format="{0:yyyy-MM-ddTHH:mm}" required>
                 </div>
                 <div class="col-12">
-                    <label asp-for="Description">�����</label>
-                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="��������ϸ����..."></textarea>
+                    <label asp-for="Description">活动描述</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="请输入活动详细描述..."></textarea>
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">@(isEdit ? "�����޸�" : "�����")</button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">ȡ��</a>
+                    <button type="submit" class="btn btn-primary">@(isEdit ? "保存修改" : "发布活动")</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">取消</a>
                 </div>
             </div>
         </form>
